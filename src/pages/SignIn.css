@@ -46,7 +46,7 @@ form {
     line-height: 56px;
     letter-spacing: -0.02em;
     text-align: left;
-    margin-bottom: -10px
+    margin-bottom: -10px;
 }
 
 .sign-text {
@@ -103,6 +103,30 @@ input::placeholder {
     text-align: left;
 }
 
+.password-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-container input {
+    flex: 1;
+    padding-right: 50px;
+    /* Extra space for the toggle icon */
+}
+
+.toggle-password {
+    position: absolute;
+    right: 16px;
+    cursor: pointer;
+    display: flex;
+}
+
+.eye-icon {
+    width: 20px;
+}
+
+
 .create-account-text {
     text-decoration: none;
     font-size: 14px;
@@ -119,6 +143,15 @@ a {
     line-height: 20px;
     letter-spacing: -0.02em;
     text-align: left;
+}
+
+.message-text {
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-align: left;
+    margin: 0;
 }
 
 .submit-button {

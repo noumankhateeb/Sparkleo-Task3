@@ -1,15 +1,42 @@
-import React from 'react';
+import React, { useState } from 'react';
+import axios from 'axios';
 import './SignIn.css';
 import BrandOverlay from '../components/BrandOverlay';
 
 const SignIn = () => {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [showPassword, setShowPassword] = useState(false); 
+    const [message, setMessage] = useState('');
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const response = await axios.post('http://localhost:5000/auth/login', {
+                email: email,
+                password: password
+            });
+
+            const token = response.data.token;
+            console.log('JWT Token:', token);
+            setMessage('Login successful!');
+            localStorage.setItem('token', token); // Store the token for later use
+        } catch (error) {
+            console.log(error);
+            console.error('Error during login:', error);
+            if (error.response && error.response.status === 401) {
+                setMessage(error.response.data.message); // Display error message
+            } else {
+                setMessage('An error occurred during login.');
+            }
+        }
+    };
+
     return (
         <div className="signin-page">
-
             <div className="signin-left">
-
                 <div className='container'>
-
                     <div className='back-to-dashboard'>
                         <button className='back-button'>
                             <img className='back-icon' src='./back.png' alt='back' />
@@ -17,7 +44,7 @@ const SignIn = () => {
                         </button>
                     </div>
 
-                    <form>
+                    <form onSubmit={handleSubmit}>
                         <h1 className='form-heading'>Sign In</h1>
                         <p className='sign-text'>Enter your email and password to sign in!</p>
 
@@ -28,10 +55,30 @@ const SignIn = () => {
                         </div>
 
                         <label>Email*</label>
-                        <input type="email" placeholder="mail@simmmple.com" required />
+                        <input
+                            type="email"
+                            placeholder="mail@simmmple.com"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
 
                         <label>Password*</label>
-                        <input type="password" placeholder="Min. 8 characters" required />
+                        <div className="password-container">
+                            <input
+                                type={showPassword ? "text" : "password"} 
+                                placeholder="Min. 8 characters"
+                                required
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                            <span
+                                className="toggle-password"
+                                onClick={() => setShowPassword(!showPassword)}
+                            >
+                                {showPassword ? <img className='eye-icon' src='./hide.png' /> : <img  className='eye-icon'  src='./show.png' />}
+                            </span>
+                        </div>
 
                         <div className="form-options">
                             <label className='checkbox-text'>
@@ -39,6 +86,11 @@ const SignIn = () => {
                             </label>
                             <a href="#">Forgot password?</a>
                         </div>
+
+                        {message &&
+                            <p id="message" className="message-text" style={{ color: message !== "Login successful!" ? "#E92928" : "green" }}>{message}</p>
+                        }
+
                         <button type="submit" className='submit-button'>Sign In</button>
 
                         <p className='create-account-text'>
